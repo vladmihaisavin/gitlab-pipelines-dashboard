@@ -2,7 +2,7 @@ import React from 'react'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { createTheme, ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
-import GridEditor from 'app/components/GridEditor'
+import StatusGrid from 'app/components/StatusGrid'
 
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
@@ -20,7 +20,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <GridEditor />
+      <StatusGrid />
     </ThemeProvider>
   )
 }
