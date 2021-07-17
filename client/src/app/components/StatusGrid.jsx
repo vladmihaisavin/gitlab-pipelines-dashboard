@@ -3,29 +3,7 @@ import RGL, { WidthProvider } from 'react-grid-layout'
 import _ from 'lodash'
 import 'app/styles/rgl.css'
 import StatusBox from './StatusBox'
-
-function getFromLS(key) {
-  let ls = {};
-  if (global.localStorage) {
-    try {
-      ls = JSON.parse(global.localStorage.getItem("rgl-7")) || {};
-    } catch (e) {
-      /*Ignore*/
-    }
-  }
-  return ls[key];
-}
-
-function saveToLS(key, value) {
-  if (global.localStorage) {
-    global.localStorage.setItem(
-      "rgl-7",
-      JSON.stringify({
-        [key]: value
-      })
-    );
-  }
-}
+import localStorage from 'app/services/localStorageService'
 
 const initialLayout = [
   {x: 0, y: 0, w: 2, h: 6, i: '0'},
@@ -36,7 +14,7 @@ const initialLayout = [
   {x: 10, y: 0, w: 2, h: 6, i: '5'}
 ]
 
-const originalLayout = getFromLS('layout') || initialLayout
+const originalLayout = localStorage.getItem('gridLayout') || initialLayout
 
 function StatusGrid(props) {
   props = {
@@ -48,7 +26,7 @@ function StatusGrid(props) {
   }
   const ReactGridLayout = WidthProvider(RGL)
   const [layout, setLayout] = useState(initialLayout)
-
+  console.log(props.projectList)
   useEffect(() => {
     setLayout(JSON.parse(JSON.stringify(originalLayout)))
   }, [])
@@ -64,8 +42,8 @@ function StatusGrid(props) {
   }
 
   const onLayoutChange = (layout) => {
-    console.log(layout)
-    saveToLS("layout", layout)
+    // console.log(layout)
+    localStorage.setItem('gridLayout', layout)
     props.onLayoutChange(layout)
   }
 
