@@ -51,6 +51,9 @@ module.exports = ({ config, userRepository }) => {
       return res.status(201).json({ id: results.insertId })
     } catch (err) {
       console.error(`Register failed. Reason: ${ err }`)
+      if (err.name === 'MongoError' && err.code === 11000) {
+        return res.status(403).json({ message: 'You already have an account with this email address.' })
+      }
       return res.sendStatus(500)
     }
   })

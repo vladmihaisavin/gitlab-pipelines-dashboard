@@ -59,12 +59,13 @@ function SignUp(props) {
 
   const signUpAction = (e) => {
     e.preventDefault()
+    setError({ active: false, message: '' })
     signUp({ name, email, password })
       .then((response) => {
         if (response.status >= 300) {
           setError({
             active: true,
-            message: 'Internal server error.'
+            message: response.data ? response.data.message : 'Internal server error.'
           })
         } else {
           signalSuccess(true)
