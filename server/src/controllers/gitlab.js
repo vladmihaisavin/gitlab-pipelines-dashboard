@@ -10,7 +10,7 @@ module.exports = () => {
       url: 'https://www.gitlab.com/api/v4/projects',
       params: req.query,
       headers: {
-        'PRIVATE-TOKEN': 'privateToken'
+        'PRIVATE-TOKEN': req.currentUser.gitlabAccessToken
       }
     })
     return res.json(data)
