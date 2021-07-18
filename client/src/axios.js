@@ -1,15 +1,28 @@
-import axios from "axios"
+import axios from 'axios'
 import Cookies from 'js-cookie'
 
-const gitlabToken = Cookies.get('gitlabToken')
+const getOptions = () => {
+    const options = {
+        baseURL: `${process.env.REACT_APP_API_URL}/api`,
+        timeout: 5000,
+        headers: {
+            'Accepts': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        validateStatus: (status) => {
+            return status < 500
+        }
+    }
+    const token = Cookies.get('auth_token')
+    if (token) {
+        options.headers['Authorization'] = `Bearer ${ token }`
+    }
+    return options
+}
 
-const axiosInstance = axios.create({
-  headers: {
-    'PRIVATE-TOKEN': gitlabToken
-  }
-});
+const httpClient = axios.create(getOptions())
 
-axiosInstance.interceptors.response.use(
+httpClient.interceptors.response.use(
   (response) => response,
   (error) =>
     Promise.reject(
@@ -17,4 +30,4 @@ axiosInstance.interceptors.response.use(
     )
 );
 
-export default axiosInstance;
+export default httpClient

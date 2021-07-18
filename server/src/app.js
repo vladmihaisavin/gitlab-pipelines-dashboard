@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors')
 const bodyParser = require('body-parser')
 const fs = require('fs')
 const morgan = require('morgan')
@@ -21,6 +22,7 @@ module.exports = ({ config, db }) => {
   const repositories = createRepositories(db)
 
   setupAccessLogs(app)
+  app.use(cors())
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: true }))
 

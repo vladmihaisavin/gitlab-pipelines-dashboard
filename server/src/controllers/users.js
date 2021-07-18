@@ -84,7 +84,7 @@ module.exports = (userRepository) => {
   app.post('/', validate(validationRules.store), async (req, res) => {
     try {
       const results = await userRepository.store(req.body)
-      return res.status(201).json({ id: results.insertId })
+      return res.status(201).json({ id: results._id })
     } catch (err) {
       return res.sendStatus(500)
     }
@@ -127,8 +127,8 @@ module.exports = (userRepository) => {
   app.get('/:id', async (req, res) => {
     try {
       const result = await userRepository.getById(req.params.id)
-      if (result.length > 0) {
-        return res.status(200).json(result[0])
+      if (result) {
+        return res.status(200).json(result)
       }
       return res.sendStatus(404)
     } catch (err) {
@@ -192,10 +192,10 @@ module.exports = (userRepository) => {
   app.put('/:id', validate(validationRules.update), async (req, res) => {
     try {
       const result = await userRepository.update(req.params.id, req.body)
-      if (result.affectedRows === 1) {
-        return res.sendStatus(204)
+      if (result === null) {
+        return res.sendStatus(404)
       }
-      return res.sendStatus(404)
+      return res.sendStatus(204)
     } catch (err) {
       return res.sendStatus(500)
     }
@@ -252,10 +252,10 @@ module.exports = (userRepository) => {
   app.patch('/:id', validate(validationRules.partialUpdate), async (req, res) => {
     try {
       const result = await userRepository.update(req.params.id, req.body)
-      if (result.affectedRows === 1) {
-        return res.sendStatus(204)
+      if (result === null) {
+        return res.sendStatus(404)
       }
-      return res.sendStatus(404)
+      return res.sendStatus(204)
     } catch (err) {
       return res.sendStatus(500)
     }
@@ -296,10 +296,10 @@ module.exports = (userRepository) => {
   app.delete('/:id', async (req, res) => {
     try {
       const result = await userRepository.destroy(req.params.id)
-      if (result.affectedRows === 1) {
-        return res.sendStatus(204)
+      if (result === null) {
+        return res.sendStatus(404)
       }
-      return res.sendStatus(404)
+      return res.sendStatus(204)
     } catch (err) {
       return res.sendStatus(500)
     }

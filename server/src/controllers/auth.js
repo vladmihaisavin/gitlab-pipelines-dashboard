@@ -94,18 +94,13 @@ module.exports = ({ config, userRepository }) => {
    */
   app.post('/login', validate(validationRules.login), async (req, res) => {
     try {
-      let results = await userRepository.getByEmail(req.body.email)
-      if (results.length === 0) {
-        console.info('Request forbidden. Reason: user not found.')
-        return res.sendStatus(403)
-      }
-      const user = results[0]
+      let user = await userRepository.getByEmail(req.body.email)
       const passwordMatch = await comparePassword(req.body.password, user.password)
       if (!passwordMatch) {
         console.info('Request forbidden. Reason: user password does not match.')
         return res.sendStatus(403)
       }
-      const token = await jwt.sign(user, config.get('auth.secret'), {
+      const token = await jwt.sign({ name: user.name, email: user.email }, config.get('auth.secret'), {
         expiresIn: config.get('auth.expiresIn')
       })
       return res.status(200).json({ user, token })

@@ -1,5 +1,5 @@
-import axios from 'axios.js';
+import httpClient from 'axios.js';
 
-export const listProjects = (gitlabUrl, params) => {
-    return axios.get(`${gitlabUrl}/api/v4/projects`, { params });
+export const listProjects = (params) => {
+    return httpClient.get('/gitlab/projects', { params });
 };

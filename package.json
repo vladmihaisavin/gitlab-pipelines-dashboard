@@ -7,7 +7,7 @@
   "scripts": {
     "client": "cd ./client && yarn start",
     "server": "cd ./server && yarn start",
-    "local": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
+    "local": "concurrently --kill-others-on-fail \"yarn server\" \"REACT_APP_API_URL=http://localhost:6606 yarn client\""
   },
   "repository": {
     "type": "git",
