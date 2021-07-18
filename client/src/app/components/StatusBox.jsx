@@ -26,9 +26,10 @@ const useStyles = makeStyles({
   }
 })
 
-export default function StatusBox({ projectInfo }) {
+export default function StatusBox({ projectInfo, branchToDisplay }) {
   const classes = useStyles()
 
+  console.log(branchToDisplay)
   return (
     <Card className={classes.root}>
       <CardContent>

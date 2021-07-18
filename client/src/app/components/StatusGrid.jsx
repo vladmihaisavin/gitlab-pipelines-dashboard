@@ -40,7 +40,7 @@ function StatusGrid(props) {
     return _.map(props.projectList, (item, idx) => {
       return (
         <div key={item.id}>
-          <StatusBox projectInfo={props.projectList[idx]} />
+          <StatusBox projectInfo={props.projectList[idx]} branchToDisplay={props.branchToDisplay} />
         </div>
       )
     })

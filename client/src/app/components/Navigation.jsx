@@ -82,7 +82,7 @@ export default function Navigation({ darkMode, setDarkMode, setBranchToDisplay }
                 <em>None</em>
               </MenuItem>
               {
-                branches.map(item => <MenuItem value={item}>{item}</MenuItem>)
+                branches.map((item, idx) => <MenuItem key={idx} value={item}>{item}</MenuItem>)
               }
             </Select>
           </FormControl>

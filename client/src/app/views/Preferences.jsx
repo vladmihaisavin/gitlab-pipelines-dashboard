@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
 import CustomizedSnackbar from 'app/components/Snackbar'
+import TransferList from 'app/components/TransferList'
 import { fetchPreferences, updatePreferences } from 'app/services/preferencesService'
 import { formatDistance, parseISO } from 'date-fns'
 
@@ -21,8 +22,8 @@ const useStyles = makeStyles(theme => ({
     display: 'block', // Fix IE 11 issue.
     marginLeft: theme.spacing(1) * 3,
     marginRight: theme.spacing(1) * 3,
-    [theme.breakpoints.up(600 + theme.spacing(1) * 3 * 2)]: {
-      width: 600,
+    [theme.breakpoints.up(800 + theme.spacing(1) * 3 * 2)]: {
+      width: 800,
       marginLeft: 'auto',
       marginRight: 'auto',
     },
@@ -60,10 +61,12 @@ function Preferences(props) {
   const [branches, setBranches] = useState([])
   const [updatedAt, setUpdatedAt] = useState(null)
 
+  const [checked, setChecked] = useState([])
+  const [leftList, setLeftList] = useState([])
+  const [rightList, setRightList] = useState([])
+
   useEffect(() => {
-    console.log('here')
     fetchPreferences().then(async ({ data }) => {
-      console.log(data)
       if (data && data.branches) {
         await indexedDbService.upsertRecord(TABLE_NAMES.CONFIG_TABLE_NAME, { type: 'preferences', ...data }, 'type')
         setHasAccessToken(data.hasAccessToken)
@@ -71,6 +74,14 @@ function Preferences(props) {
         setUpdatedAt(data.updatedAt)
       }
     })
+  }, [])
+
+  useEffect(() => {
+    indexedDbService.getAllRecords(TABLE_NAMES.PROJECTS_TABLE_NAME)
+      .then(data => {
+        setLeftList((data || []).filter(item => item.display !== 'yes').map(item => item.name))
+        setRightList((data || []).filter(item => item.display === 'yes').map(item => item.name))
+      })
   }, [])
 
   const savePreferences = (e) => {
@@ -81,10 +92,16 @@ function Preferences(props) {
       body.accessToken = accessToken
     }
     updatePreferences(body)
-      .then((response) => {
+      .then(async (response) => {
         if (response.status !== 204) {
           setError({ active: true, message: 'An error occured. Please try again later.' })
         } else {
+          for (const leftItem of leftList) {
+            await indexedDbService.updateRecordWhere(TABLE_NAMES.PROJECTS_TABLE_NAME, { name: leftItem }, { display: 'no' })
+          }
+          for (const rightItem of rightList) {
+            await indexedDbService.updateRecordWhere(TABLE_NAMES.PROJECTS_TABLE_NAME, { name: rightItem }, { display: 'yes' })
+          }
           props.history.push('/')
         }
       })
@@ -132,6 +149,14 @@ function Preferences(props) {
               }}
             />
           </FormControl>
+          <TransferList
+            checked={checked}
+            setChecked={setChecked}
+            leftList={leftList}
+            setLeftList={setLeftList}
+            rightList={rightList}
+            setRightList={setRightList}
+          />
           <Button
             type="submit"
             fullWidth

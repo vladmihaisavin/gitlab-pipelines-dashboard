@@ -20,6 +20,12 @@ const createService = (indexedDb) => {
       await indexedDb[tableName].add(record)
     }
   }
+  const updateRecordWhere = async (tableName, filter, changes) => {
+    const existingRecord = await indexedDb[tableName].get(filter)
+    if (existingRecord !== undefined) {
+      await indexedDb[tableName].update(existingRecord.id, changes)
+    }
+  }
   const addRecords = async (tableName, records) => {
     return await indexedDb.table(tableName).bulkAdd(records)
   }
@@ -32,6 +38,7 @@ const createService = (indexedDb) => {
 
   return {
     addRecords,
+    updateRecordWhere,
     upsertRecord,
     getAllRecords,
     getAllRecordsDesc,
