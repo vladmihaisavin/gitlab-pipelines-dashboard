@@ -9,7 +9,7 @@
     "client": "cd ./client && yarn start",
     "client:build:run": "cd ./client && yarn build && yarn serve",
     "local": "concurrently --kill-others-on-fail \"yarn server\" \"REACT_APP_API_URL=http://localhost:6606 yarn client\"",
-    "prod": "concurrently --kill-others-on-fail \"yarn server\" \"REACT_APP_API_URL=https://gitlab-pipelines-dashboard-api.ideaparser.com yarn client:build:run\""
+    "prod": "concurrently --kill-others-on-fail \"yarn server\" \"REACT_APP_API_URL=http://localhost:6606 yarn client:build:run\""
   },
   "repository": {
     "type": "git",

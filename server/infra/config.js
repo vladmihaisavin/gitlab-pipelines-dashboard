@@ -17,13 +17,13 @@ module.exports = convict({
     url: {
       doc: 'Web app URL',
       format: String,
-      default: 'https://gitlab-pipelines-dashboard.ideaparser.com',
+      default: 'http://localhost:3000',
       env: 'APP_URL'
     },
     apiUrl: {
       doc: 'API URL',
       format: String,
-      default: 'https://gitlab-pipelines-dashboard-api.ideaparser.com',
+      default: 'http://localhost:6606',
       env: 'API_URL'
     },
   },
