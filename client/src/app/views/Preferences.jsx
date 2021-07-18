@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import AppContext from 'app/appContext'
 import { Link, withRouter } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import FormControl from '@material-ui/core/FormControl'
@@ -52,6 +53,7 @@ const branchesOptions = ['develop', 'integration', 'master', 'main', 'release']
 
 function Preferences(props) {
   const classes = useStyles()
+  const { indexedDbService, TABLE_NAMES } = useContext(AppContext)
   const [error, setError] = useState({ active: false, message: '' })
   const [hasAccessToken, setHasAccessToken] = useState(false)
   const [accessToken, setAccessToken] = useState('')
@@ -59,9 +61,11 @@ function Preferences(props) {
   const [updatedAt, setUpdatedAt] = useState(null)
 
   useEffect(() => {
-    fetchPreferences().then(({ data }) => {
+    console.log('here')
+    fetchPreferences().then(async ({ data }) => {
       console.log(data)
       if (data && data.branches) {
+        await indexedDbService.upsertRecord(TABLE_NAMES.CONFIG_TABLE_NAME, { type: 'preferences', ...data }, 'type')
         setHasAccessToken(data.hasAccessToken)
         setBranches(data.branches)
         setUpdatedAt(data.updatedAt)
